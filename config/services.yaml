@@ -1,0 +1,28 @@
+parameters:
+  api_token_url: '%env(API_TOKEN_URL)%'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      string $apiTokenUrl: '%api_token_url%'
+
+  # Load classes automatically
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+
+  # Alias the interface to the Symfony-session backed implementation
+  App\Service\User\UserStorageInterface: '@App\Service\User\SessionUserStorage'
+
+  App\EventListener\TokenRefreshListener:
+    arguments:
+      $userService: '@App\Service\User\UserService'
+      $apiClientService: '@App\Service\ApiClientService'
+      $router: '@router'
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Author Details{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin:0; padding:0; }
+        .container { max-width:800px; margin:2rem auto; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+        h1 { margin-top:0; color:#007bff; }
+        h2 { margin-bottom:0.5rem; }
+        .book { border-top:1px solid #ccc; padding-top:0.5rem; margin-top:0.5rem; }
+        .book:first-child { border-top:none; padding-top:0; margin-top:0; }
+        .flash { padding:0.5rem 1rem; margin-bottom:1rem; border-radius:4px; }
+        .flash-success { background-color:#d4edda; color:#155724; }
+        .flash-error { background-color:#f8d7da; color:#721c24; }
+        .delete-button { background:red; color:white; padding:0.5rem 1rem; border:none; border-radius:4px; cursor:pointer; margin-top:0.5rem; }
+        .back-button { display:inline-block; margin-top:1rem; padding:0.5rem 1rem; background:#007bff; color:white; border:none; border-radius:4px; text-decoration:none; cursor:pointer; }
+        .back-button:hover { background:#0056b3; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ label }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <div style="text-align:right; margin-bottom:1rem;">
+            <a href="{{ path('authors') }}" class="back-button">Back to All Authors</a>
+        </div>
+
+        {% if author %}
+            <h1>{{ author.first_name }} {{ author.last_name }}</h1>
+            <p><strong>Gender:</strong> {{ author.gender }}</p>
+            <p><strong>Birthday:</strong> {{ author.birthday|date("Y-m-d") }}</p>
+            <p><strong>Place of Birth:</strong> {{ author.place_of_birth }}</p>
+            <p><strong>Biography:</strong> {{ author.biography }}</p>
+
+            <h2>Books</h2>
+            {% if author.books is empty %}
+                <p>No books found.</p>
+                <form action="{{ path('author_delete', {'id': author.id}) }}" method="post">
+                    <button type="submit" class="delete-button">Delete Author</button>
+                </form>
+            {% else %}
+                {% for book in author.books %}
+                    <div class="book">
+                        <strong>{{ book.title }}</strong> ({{ book.release_date|date("Y-m-d") }})<br>
+                        ISBN: {{ book.isbn }} | Format: {{ book.format }} | Pages: {{ book.number_of_pages }}<br>
+                        {{ book.description }}<br>
+                        <form action="{{ path('book_delete', {'authorId': author.id, 'bookId': book.id}) }}" method="post" style="display:inline">
+                            <button type="submit" class="delete-button">Delete Book</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authors{% endblock %}
+
+{% block stylesheets %} <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        text-align: center;
+        margin: 2rem 0;
+    }
+    .add-book-button {
+        display: block;
+        width: max-content;
+        margin: 0 auto 2rem;
+        padding: 0.5rem 1rem;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .authors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 0 2rem 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .author-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        text-align: center;
+        transition: transform 0.2s;
+    }
+    .author-card:hover {
+        transform: translateY(-3px);
+    }
+    .author-card a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    .flash {
+        padding: 0.5rem 1rem;
+        margin: 1rem auto;
+        border-radius: 4px;
+        max-width: 600px;
+        text-align: center;
+    }
+    .flash-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .flash-error {
+        background-color: #f8d7da;
+        color: #721c24;
+    } </style>
+{% endblock %}
+
+{% block body %} <h1>Authors</h1>
+
+    <a href="{{ path('book_new') }}" class="add-book-button">Add Book</a>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <p class="flash flash-{{ label }}">{{ message }}</p>
+        {% endfor %}
+    {% endfor %}
+
+    {% if authors is empty %}
+        <p style="text-align:center;">No authors found.</p>
+    {% else %}
+        <div class="authors-grid">
+            {% for author in authors %}
+                <div class="author-card">
+                    <a href="{{ path('author_detail', {'id': author.id}) }}">
+                        {{ author.first_name }} {{ author.last_name }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}
