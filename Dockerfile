@@ -15,8 +15,8 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
+RUN mkdir -p var && chown -R www-data:www-data var
+
 
 EXPOSE 9000
-
 CMD ["php-fpm"]

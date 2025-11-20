@@ -1,7 +1,7 @@
 PHP_CONTAINER := symfony_php
 
 run:
-	docker-compose up -d
+	docker-compose up -d --build
 
 bash:
 	docker exec -it $(PHP_CONTAINER) bash
